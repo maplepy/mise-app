@@ -12,6 +12,8 @@ Prototype plan: a throwaway prototype that validates the core UX flows (add/mana
 
 <!-- closed tickets will be listed here as they are resolved -->
 
+- [Prototype: Validate pantry → recipes → grocery-list flow](issues/01-validate-core-flow.md): Core flow validated: Pantry (expiry + category), Recipes (pantry matching), Grocery List (auto-add missing items).
+
 ## Not yet specified
 
 - Exact import formats for recipes (web/social) and the priority for each.
