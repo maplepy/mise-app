@@ -1,30 +1,29 @@
-# Issue tracker: Local Markdown
+# Issue tracker: GitHub Issues
 
-Issues and specs for this repo live as markdown files in `.scratch/`.
+Issues live in the GitHub repo: `github.com/maplepy/mise-app`
 
-## Conventions
-
-- One feature per directory: `.scratch/<feature-slug>/`
-- The spec is `.scratch/<feature-slug>/spec.md`
-- Implementation issues are one file per ticket at `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01`, never a single combined tickets file
-- Triage state is recorded as a `Status:` line near the top of each issue file (see `triage-labels.md` for the role strings)
-- Comments and conversation history append to the bottom of the file under a `## Comments` heading
-
-## When a skill says "publish to the issue tracker"
-
-Create a new file under `.scratch/<feature-slug>/` (creating the directory if needed).
-
-## When a skill says "fetch the relevant ticket"
-
-Read the file at the referenced path. The user will normally pass the path or the issue number directly.
+Uses the `gh` CLI.
 
 ## Wayfinding operations
 
-Used by `/wayfinder`. The **map** is a file with one **child** file per ticket.
+Used by `/wayfinder`.
 
-- **Map**: `.scratch/<effort>/map.md` (the Notes / Decisions-so-far / Fog body).
-- **Child ticket**: `.scratch/<effort>/issues/NN-<slug>.md`, numbered from `01`, with the question in the body. A `Type:` line records the ticket type (`research`/`prototype`/`grilling`/`task`); a `Status:` line records `claimed`/`resolved`.
-- **Blocking**: a `Blocked by: NN, NN` line near the top. A ticket is unblocked when every file it lists is `resolved`.
-- **Frontier**: scan `.scratch/<effort>/issues/` for files that are open, unblocked, and unclaimed; first by number wins.
-- **Claim**: set `Status: claimed` and save before any work.
-- **Resolve**: append the answer under an `## Answer` heading, set `Status: resolved`, then append a context pointer (gist + link) to the map's Decisions-so-far in `map.md`.
+- **Map**: a GitHub Issue labelled `wayfinder:map`, with child issues labelled `wayfinder:research`, `wayfinder:prototype`, `wayfinder:grilling`, or `wayfinder:task`.
+- **Child ticket**: a GitHub Issue linked as a related issue to the map.
+- **Blocking**: use GitHub's native "Blocked by" dependency issue links (requires Pro for private repos; public repos get it free).
+- **Frontier**: open issues with no blocking dependencies.
+- **Claim**: assign the issue to yourself via `gh issue edit <n> --assignee @me` before any work.
+- **Resolve**: add a comment with the answer, close the issue, and add a context pointer to the map's "Decisions so far" comment.
+
+## Creating a map
+
+```bash
+gh issue create --title "<title>" --body "<map body>" --label "wayfinder:map"
+```
+
+## Creating a ticket
+
+```bash
+gh issue create --title "<question title>" --body "## Question\n\n<question>" --label "wayfinder:<type>" --assignee @me
+gh issue edit <map-n> --add-relationship "blocks" <ticket-n>
+```
